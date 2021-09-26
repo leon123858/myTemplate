@@ -1,0 +1,15 @@
+@localURL=http://127.0.0.1:3000/
+###
+# 首頁
+GET {{localURL}} HTTP/1.1
+content-type: application/json
+
+###
+# test1
+POST {{localURL}}users HTTP/1.1
+content-type: application/json
+
+{
+  "AAA":1,
+  "BBB":2
+}

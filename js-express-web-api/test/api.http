@@ -1,0 +1,21 @@
+@localURL=http://127.0.0.1:3000/
+###
+# 首頁
+GET {{localURL}} HTTP/1.1
+content-type: application/json
+
+###
+# test1
+POST {{localURL}}api/api1 HTTP/1.1
+content-type: application/json
+
+{
+}
+
+###
+# test2
+POST {{localURL}}webhook/webhook1 HTTP/1.1
+content-type: application/json
+
+{
+}
