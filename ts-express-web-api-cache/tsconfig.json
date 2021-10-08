@@ -1,10 +1,12 @@
 {
 	"compilerOptions": {
 		"module": "esnext",
-		"target": "es6",
-		"lib": ["es6"],
+		"target": "es2017",
+		"esModuleInterop": true,
+		"lib": ["es2017"],
 		"sourceMap": true,
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "Node"
 	},
 
 	"exclude": ["node_modules"]

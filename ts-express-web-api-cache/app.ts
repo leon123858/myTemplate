@@ -1,6 +1,8 @@
 import express from 'express';
 import { AddressInfo } from 'net';
 import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
+import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
@@ -14,9 +16,11 @@ const debug = d('my express app');
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// view engine setup
+const swaggerDocument = JSON.parse(
+	(await readFile(path.join(__dirname, 'swagger.json'))).toString()
+);
 //app.use(serveFavicon(__dirname + '/public/favicon.ico'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));
@@ -24,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cache);
+//app.use(cache);
 
 app.use('/', routes);
 app.use('/users', users);
