@@ -13,9 +13,56 @@
 		}
 	},
 	"schemes": ["http"],
-	"host": "localhost:3080",
+	"host": "localhost:3000",
 	"basePath": "/api",
 	"paths": {
+		"/": {
+			"get": {
+				"summary": "進入首頁",
+				"description": "進入首頁",
+				"produces": ["text/plain"],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "successful result, 首頁 html",
+						"schema": {
+							"type": "string"
+						}
+					},
+					"500": {
+						"description": "Invalid, 500頁 html",
+						"schema": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"post": {
+				"summary": "回音",
+				"description": "回傳寄出 body",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "anything",
+						"in": "should be string",
+						"description": "any parameters, and should be string",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "任意數量 string",
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/anyThing"
+						}
+					}
+				}
+			}
+		},
 		"/todos": {
 			"get": {
 				"summary": "Get all the tasks",
@@ -204,6 +251,14 @@
 					"type": "string"
 				},
 				"message": {
+					"type": "string"
+				}
+			}
+		},
+		"anyThing": {
+			"type": "object",
+			"properties": {
+				"anything": {
 					"type": "string"
 				}
 			}
