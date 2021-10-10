@@ -1,12 +1,17 @@
 import fs from 'fs/promises';
 
 let line = 0;
-
+let testers = [];
 const testStructure = JSON.parse(
 	(await fs.readFile('./test/test.json')).toString()
 );
 
-const createFile = (json: any, basePath: string) => {
+const createFile = (
+	json: any,
+	basePath: string,
+	level: string,
+	tags: string
+) => {
 	if (typeof json == 'string') return;
 	Object.keys(json).forEach(async (key) => {
 		let state;
@@ -16,42 +21,29 @@ const createFile = (json: any, basePath: string) => {
 			const list = key.split('.');
 			if (list.length < 2) {
 				await fs.mkdir(`${basePath}/${key}`);
-				createFile(json[key], basePath + '/' + key);
+				createFile(
+					json[key],
+					`${basePath}/${key}`,
+					`../${level}`,
+					`${tags}${key}-`
+				);
 				return;
 			}
 			await fs.writeFile(
 				`${basePath}/${key}`,
-				`
-			import { expect } from 'chai';
-
-const before = async () => {
-	console.log('${list[0]} test before');
-	return;
-};
-const main = async () => {
-	console.log('${list[0]} test start');
-	//expect(XX).to.equal(XX);
-	await final();
-	return;
-};
-const final = async () => {
-	console.log('${list[0]} test end');
-	return;
-};
-////////////////////////////////
-// 只測試這塊時解除屏蔽
-////////////////////////////////
-// before()
-// 	.then(() => main())
-// 	.then(() => final());
-export default main;
-
-			`
+				`import tester from '${level}tester.js';\r\nimport { expect } from 'chai';\r\nconst test = new tester('${
+					tags + list[0]
+				}');\r\ntest.main(async () => {\r\n	//expect(X * X, 'X*X=Y').to.equal(Y);\r\n});\r\n//test.comment = 'comment something when error occur';\r\nexport default test;`
 			);
 			return;
 		}
 		if (state.isDirectory()) {
-			createFile(json[key], basePath + '/' + key);
+			createFile(
+				json[key],
+				`${basePath}/${key}`,
+				`../${level}`,
+				`${tags}${key}-`
+			);
 		}
 		return;
 	});
@@ -65,7 +57,7 @@ const getImport = (json, storage, basePath) => {
 			getImport(json[key], storage, basePath + key + '/');
 		} else {
 			storage.import += `import ${list[0]}Test${line} from "${basePath}${list[0]}.js";\r\n`;
-			storage.test += `await ${list[0]}Test${line}();\r\n`;
+			testers.push(`${list[0]}Test${line}`);
 			line++;
 		}
 	});
@@ -74,34 +66,17 @@ const getImport = (json, storage, basePath) => {
 const createIndex = async (json: any, basePath: string) => {
 	let storage = {
 		import: '',
-		test: '',
 	};
 	getImport(json, storage, './');
 	await fs.writeFile(
 		`${basePath}/index.ts`,
-		`
-		${storage.import}
-
-		const before = async () => {
-			console.log('[test before]');
-			return;
-		};
-		const main = async () => {
-			console.log('[test start]');
-			
-			${storage.test}
-
-			return;
-		};
-		const final = async () => {
-			console.log('[test end]');
-			return;
-		};
-		
-		before()
-			.then(() => main())
-			.then(() => final());
-		`
+		`import { before, main, final } from './runner.js';\r\n${
+			storage.import
+		}\r\n(async () => {\r\n	await before('${JSON.stringify(
+			testStructure
+		)}',${line});\r\n	const errors = await main([${testers.join(
+			','
+		)}]);\r\n	await final({ array: errors.errList, comments: errors.errComments });\r\n})();`
 	);
 };
 
@@ -109,7 +84,7 @@ const main = async () => {
 	const url = './test';
 	console.log('testStructure:');
 	console.log(testStructure);
-	createFile(testStructure, url);
+	createFile(testStructure, url, './', '');
 	createIndex(testStructure, url);
 };
 

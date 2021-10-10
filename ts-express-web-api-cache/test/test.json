@@ -3,5 +3,9 @@
 	"baby.ts": "baby",
 	"file": {
 		"baby.ts": "test"
+	},
+	"operation": {
+		"Add.ts": "add function",
+		"minus.ts": "minus function"
 	}
 }
