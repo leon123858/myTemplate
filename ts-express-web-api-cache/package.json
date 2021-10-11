@@ -8,7 +8,7 @@
 		"clean": "tsc --build --clean",
 		"start": "kill-port 3000 & tsc --build & node app",
 		"dev": "tsc --build & nodemon --ext ts,json --exec npm start ",
-		"testAdd": "tsc --build & node ./test/testCreate.js",
+		"testAdd": "tsc --build & node ./services/test/testCreate.js",
 		"test": "tsc --build & node ./test/index.js"
 	},
 	"description": "ts-express-web-api",

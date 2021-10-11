@@ -31,9 +31,11 @@ const createFile = (
 			}
 			await fs.writeFile(
 				`${basePath}/${key}`,
-				`import tester from '${level}tester.js';\r\nimport { expect } from 'chai';\r\nconst test = new tester('${
+				`import tester from '${level}../services/test/tester.js';\r\nimport { expect } from 'chai';\r\nconst test = new tester('${
 					tags + list[0]
-				}');\r\ntest.main(async () => {\r\n	//expect(X * X, 'X*X=Y').to.equal(Y);\r\n});\r\n//test.comment = 'comment something when error occur';\r\nexport default test;`
+				}');\r\ntest.main(async () => {\r\n	//expect(X * X, 'X*X=Y').to.equal(Y);\r\n});\r\ntest.comment = '${
+					json[key]
+				}';\r\nexport default test;`
 			);
 			return;
 		}
@@ -70,7 +72,7 @@ const createIndex = async (json: any, basePath: string) => {
 	getImport(json, storage, './');
 	await fs.writeFile(
 		`${basePath}/index.ts`,
-		`import { before, main, final } from './runner.js';\r\n${
+		`import { before, main, final } from '../services/test/runner.js';\r\n${
 			storage.import
 		}\r\n(async () => {\r\n	await before('${JSON.stringify(
 			testStructure
