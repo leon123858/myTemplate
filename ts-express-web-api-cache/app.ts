@@ -9,6 +9,7 @@ import bodyParser from 'body-parser';
 import d from 'debug';
 import serveFavicon from 'serve-favicon';
 import { cache } from './services/cache.js';
+import documents from './services/documents/index.js';
 import routes from './routes/index.js';
 import users from './routes/user.js';
 
@@ -19,7 +20,9 @@ const __dirname = path.dirname(__filename);
 const swaggerDocument = JSON.parse(
 	(await readFile(path.join(__dirname, 'swagger.json'))).toString()
 );
+
 //app.use(serveFavicon(__dirname + '/public/favicon.ico'));
+app.use('/documents', documents('./documents'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
