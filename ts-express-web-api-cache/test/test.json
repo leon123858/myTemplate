@@ -1,11 +1,11 @@
 {
-	"sum.ts": "test if sum function can work",
-	"baby.ts": "baby",
-	"file": {
-		"baby.ts": "test"
-	},
-	"operation": {
-		"Add.ts": "add function",
-		"minus.ts": "minus function"
-	}
+  "sum.ts": "test if sum function can work",
+  "baby.ts": "baby",
+  "file": {
+    "baby.ts": "test"
+  },
+  "operation": {
+    "Add.ts": "add function",
+    "minus.ts": "minus function"
+  }
 }
