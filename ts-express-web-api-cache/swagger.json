@@ -81,28 +81,26 @@
 				}
 			}
 		},
-		"/documents/path": {
+		"/documents/{path}": {
 			"get": {
 				"summary": "get document structure for this server",
 				"description": "get document structure for this server",
-				"produces": ["application/json"],
-				"parameters": [],
+				"produces": ["plain/text"],
+				"parameters": [
+					{
+						"name": "path",
+						"in": "path",
+						"description": "目標目錄, 例如維持空, 就是整個文件資料夾",
+						"required": true,
+						"type": "string"
+					}
+				],
 				"responses": {
 					"200": {
-						"description": "server 提供 documents 的檔案架構和各檔案位置",
+						"description": "指定的文件資料夾結構,會回傳渲染後頁面可直接使用",
 						"schema": {
 							"type": "object",
-							"example": {
-								"introduce.md": "./documents/introduce.md",
-								"test": {
-									"introduce.md": "./documents/test/introduce.md",
-									"test copy": {
-										"copy": {
-											"copy.md": "./documents/test/test copy/copy/copy.md"
-										}
-									}
-								}
-							}
+							"$ref": "#/definitions/html"
 						}
 					}
 				}
@@ -113,7 +111,7 @@
 				"summary": "get document for this server",
 				"description": "get document for this server, ex: path=`./documents/introduce.md`, path can get from router `/documents/path`",
 				"consumes": ["plain/text"],
-				"produces": ["application/json"],
+				"produces": ["plain/text"],
 				"parameters": [
 					{
 						"name": "path",

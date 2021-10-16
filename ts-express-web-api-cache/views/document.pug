@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/main.css')
+  body
+    block content
+    h1= "document"
+    div 
+      ul
+      each val, index in data
+        - if(typeof val == "string") 
+          - var path = "/documents?path=" + val;
+          li
+            a(href=path)= index
+        - else
+          - var path = beforePath + "/" + index;
+          li
+            a(href=path)= index
