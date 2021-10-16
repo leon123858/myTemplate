@@ -1,5 +1,4 @@
 import { readdir, lstat } from 'fs/promises';
-import { final } from '../test/runner';
 
 interface docsStructure {
 	[fileOrDir: string]: string | docsStructure;
@@ -63,7 +62,9 @@ const format = async (obj: { json: docsStructure; final: docsStructure }) => {
 		}
 	});
 };
-
+const getList = async (obj: { json: docsStructure; final: docsStructure }) => {
+	return Object.values(obj.json);
+};
 const getDocumentsStructure = async (documents: string) => {
 	const obj: { json: docsStructure; final: docsStructure } = {
 		json: {},
@@ -71,7 +72,7 @@ const getDocumentsStructure = async (documents: string) => {
 	};
 	await get(documents, obj, '');
 	await format(obj);
-	return obj.final;
+	return obj;
 };
 
-export default getDocumentsStructure;
+export { getDocumentsStructure, getList };

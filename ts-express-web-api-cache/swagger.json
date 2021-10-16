@@ -81,6 +81,73 @@
 				}
 			}
 		},
+		"/documents/path": {
+			"get": {
+				"summary": "get document structure for this server",
+				"description": "get document structure for this server",
+				"produces": ["application/json"],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "server 提供 documents 的檔案架構和各檔案位置",
+						"schema": {
+							"type": "object",
+							"example": {
+								"introduce.md": "./documents/introduce.md",
+								"test": {
+									"introduce.md": "./documents/test/introduce.md",
+									"test copy": {
+										"copy": {
+											"copy.md": "./documents/test/test copy/copy/copy.md"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/documents": {
+			"get": {
+				"summary": "get document for this server",
+				"description": "get document for this server, ex: path=`./documents/introduce.md`, path can get from router `/documents/path`",
+				"consumes": ["plain/text"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "path",
+						"in": "query",
+						"description": "document in the path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "指定的 markdown html (which document want to read)",
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/html"
+						}
+					},
+					"403": {
+						"description": "不在許可中的地址",
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/html"
+						}
+					},
+					"404": {
+						"description": "伺服器檔案讀取錯誤",
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/html"
+						}
+					}
+				}
+			}
+		},
 		"/todos": {
 			"get": {
 				"summary": "Get all the tasks",
